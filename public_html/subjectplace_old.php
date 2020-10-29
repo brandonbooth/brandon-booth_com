@@ -1,5 +1,5 @@
 <?php
-require_once('../private/dbconnect.php');
+require_once('../include_/dbconnect.php');
 
 // // html and css variables
 $color1 = "@1@";
@@ -13,11 +13,28 @@ $twitter_link = "@8@";
 $table_name = "@9@";
 $last_update = "@10@";
 
+// // =========================================
+// // html and css variables
+// $color1 = "#333"; //grey
+// $page_title = "Eat in SF";
+// $page_description = "A list of my favorite places to eat at in San Francisco, California. ";
+// $page_keywords = "Map,Food,Eat,San Francicso,California,SF,CA";
+// $page_name = "eatdrinkSF.php";
+// $page_author = "Brandon Booth";
+// $page_image = "projects_eatSF.png";
+// $twitter_link = "Where%20to%20eat%20in%20San%20Francisco,%20California.";
+// $table_name = "eaSF";
+// $last_update = "Spring 2020"
+// // =========================================
+
 // Return the number of rows in result set
 $query = "SELECT * FROM ".$table_name;
-$result = mysqli_query($conn,$query);	
+
+$result = $mysqli->query($query);
+
 $rowcount=mysqli_num_rows($result);
-$fieldcount = mysqli_field_count($conn);
+
+$fieldcount = mysqli_field_count($mysqli);
 
 /* Get field information for all columns */
 $finfo = $result->fetch_fields();
@@ -40,21 +57,39 @@ foreach ($finfo as $val) {
 
 for ($y = 1; $y <= $rowcount; $y++) {
 	$query = "SELECT * FROM ".$table_name." WHERE col1 =". $y . ";";
-	$results = mysqli_query($conn,$query);
-	$row = mysqli_fetch_row($results);
+	$results = $mysqli->query($query);
+	$row = $results->fetch_assoc();
 
 	for ($x = 1; $x <= $fieldcount; $x++) {
-		${'r' . $y. 'c'. $x} = $row[$x-1];
-		${'r' . $y. 'c'. $field[$x-1]} = $row[$x-1];
+		${'r' . $y. 'c'. $x} = $row[$field[$x-1]];
+		${'r' . $y. 'c'. $field[$x-1]} = $row[$field[$x-1]];
 	}
-}
 
-$conn->close();
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-176327266-1"></script>
+	<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+
+	gtag('config', 'UA-176327266-1');
+	</script>
+
+
+
+
+
+
+
+
 	<title><?php echo $page_title ?></title>
 	<meta charset="UTF-8">
 	<?php echo
@@ -112,19 +147,20 @@ $conn->close();
   	<!-- Link to google icon lib -->
   	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+
   	<!-- navbar css -->
   	<link rel="stylesheet" href="/css/navbar_maps.css">
 
 	<!-- service worker manifest -->
   	<link rel="manifest" href="/manifest.json">
 
-	<!-- google api key for map -->
-	<?php
-		echo '<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&key='. $api_key_google_maps_mapped_lists .'&language=us"></script>' ;
+  	<!-- google maps api script -->
+	<?php 
+		echo $googlemaps_connection_key;
 	?>
 	
 <style>
-	
+
 /*+++++++++++++++++++page specific css+++++++++++++++++++*/
 html, body {
 	font-family: -apple-system, BlinkMacSystemFont, sans-serif;

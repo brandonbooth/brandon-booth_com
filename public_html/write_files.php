@@ -1,6 +1,6 @@
 <?php
     session_start();
-    require_once('../include_/dbconnect.php'); 
+    require_once('../private/dbconnect.php'); 
     
     $_SESSION['table_name'] = 'list_pages';
     
